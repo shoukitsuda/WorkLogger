@@ -33,44 +33,41 @@ import android.widget.TimePicker;
  */
 
 class LogLister
-  implements AdapterView.OnItemLongClickListener
-{
-  private static final String LOGTAG = "LogLister";
-  private MainActivity		activity = null;
-  private ListView logList = null;
-  private WorkRecordManager	recordManager = null;
-  private ArrayList<String> last_items = null;
-  private AlertDialog alertDialog = null;
+        implements AdapterView.OnItemLongClickListener {
+    private static final String LOGTAG = "LogLister";
+    private MainActivity activity = null;
+    private ListView logList = null;
+    private WorkRecordManager recordManager = null;
+    private ArrayList<String> last_items = null;
+    private AlertDialog alertDialog = null;
 
-  LogLister(MainActivity activity,
-            ListView logList,
-            WorkRecordManager recordManager)
-  {
-    this.activity = activity;
-    this.logList = logList;
-    this.recordManager = recordManager;
-  }
+    LogLister(MainActivity activity,
+              ListView logList,
+              WorkRecordManager recordManager) {
+        this.activity = activity;
+        this.logList = logList;
+        this.recordManager = recordManager;
+    }
 
-  /*
-   * Start editing a time record when a list item is clicked.
-   *
-   * @return a boolean
-   */
-  public boolean onItemLongClick(AdapterView<?> av,
-                                 View view,
-                                 int position, // 0..?
-                                 long id)
-  {
-    editTimeRecord(position);
-    return true;		// No need to call onItemClick()
-  }
+    /*
+     * Start editing a time record when a list item is clicked.
+     *
+     * @return a boolean
+     */
+    public boolean onItemLongClick(AdapterView<?> av,
+                                   View view,
+                                   int position, // 0..?
+                                   long id) {
+        editTimeRecord(position);
+        return true;        // No need to call onItemClick()
+    }
 
-  /*
-   * Update the list of the newest work records within one month days.
-   */
-  void updateListView()
-  {
-    List<WorkRecord> records = recordManager.getWorkRecords(31);
+    /*
+     * Update the list of the newest work records within one month days.
+     */
+    void updateListView() {
+        Log.d(LOGTAG, "updateListView(): ");
+        List<WorkRecord> records = recordManager.getWorkRecords(31);
 
     // Create a list of items to be displayed.
     ArrayList<String> items = new ArrayList<>();
@@ -84,209 +81,201 @@ class LogLister
       items.add(label);
     }
 
-    if(items.equals(last_items)){
-      // No need to update a listView because nothing is updated.
-      return;
-    }
-    last_items = items;
+        if (items.equals(last_items)) {
+            // No need to update a listView because nothing is updated.
+            return;
+        }
+        last_items = items;
 
-    ArrayAdapter<String> adapter =
-      new ArrayAdapter<>(activity, android.R.layout.simple_list_item_1, items);
-    logList.setAdapter(adapter);
-  }
+        ArrayAdapter<String> adapter =
+                new ArrayAdapter<>(activity, android.R.layout.simple_list_item_1, items);
 
-  /*
-   * Update a time record by replacing its start and end times.
-   *
-   * @param record a work record to update
-   * @param startTime a start time of a work record
-   * @param endTime a end time of a work record
-   */
-  private void updateTimeRecord(WorkRecord record,
-                                Time startTime, Time endTime)
-  {
-    if(!WorkRecord.isValidTimeRange(startTime, endTime)){
-      Log.d(LOGTAG, "editTimeRecord: Ignore invalid time range");
-      return;
+        logList.setAdapter(adapter);
     }
 
-    if(startTime != null){
-      Log.d(LOGTAG, "editTimeRecord: Set checkin time:" + startTime);
-      record.setCheckinTime(startTime);
-    }
-    if(endTime != null){
-      Log.d(LOGTAG, "editTimeRecord: Set checkout time:" + endTime);
-      record.setCheckoutTime(endTime);
-    }
-    recordManager.updateWorkRecord(record);
-  }
 
-  private Time getTimeOfButton(Button button)
-  {
-    Time time = null;
-    try {
-      time = Time.valueOf(button.getText().toString());
-    } catch(IllegalArgumentException ex){
-    }
-    return time;
-  }
+    /*
+     * Update a time record by replacing its start and end times.
+     *
+     * @param record a work record to update
+     * @param startTime a start time of a work record
+     * @param endTime a end time of a work record
+     */
+    private void updateTimeRecord(WorkRecord record,
+                                  Time startTime, Time endTime) {
+        Log.d(LOGTAG, "updateTimeRecord(): ");
+        if (!WorkRecord.isValidTimeRange(startTime, endTime)) {
+            Log.d(LOGTAG, "editTimeRecord: Ignore invalid time range");
+            return;
+        }
 
-  /*
-   * Pop up a dialog and start editing a time record located at a
-   * position in a list.
-   *
-   * @param list_position a position in a list from the top
-   */
-  private void editTimeRecord(int list_position)
-  {
-    final View editTimeView =
-      activity.getLayoutInflater().inflate(R.layout.time_editor, null, false);
-    final WorkRecord record = recordManager.getWorkRecordAt(list_position);
-    final String message =
-      String.format(activity.getResources()
-		    .getString(R.string.time_editor_edit_message_format),
-		    record.getDateAsString());
-
-    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-    builder.setIcon(R.drawable.worklogger_icon);
-    builder.setTitle(R.string.time_editor_title);
-    builder.setMessage(message);
-    builder.setView(editTimeView);
-    builder.setPositiveButton
-      (R.string.time_editor_yes,
-       new DialogInterface.OnClickListener()
-       {
-	 @Override
-	 public void onClick(DialogInterface dialogInterface,
-                         int i)
-	 {
-	   Button startButton =
-	     (Button)editTimeView.findViewById(R.id.startTimeButton);
-	   Button endButton =
-	     (Button)editTimeView.findViewById(R.id.endTimeButton);
-	   Time startTime = getTimeOfButton(startButton);
-	   Time endTime = getTimeOfButton(endButton);
-
-	   updateTimeRecord(record, startTime, endTime);
-	   updateListView();
-	 }
-       });
-    builder.setNeutralButton
-      (R.string.time_editor_cancel,
-       new DialogInterface.OnClickListener()
-       {
-	 @Override
-	 public void onClick(DialogInterface dialogInterface,
-                         int i)
-	 {
-	   // Nothing to do.
-	 }
-       });
-    builder.create();
-    alertDialog = builder.show();
-    alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
-
-    Button startButton = (Button)editTimeView.findViewById(R.id.startTimeButton);
-    Button endButton = (Button)editTimeView.findViewById(R.id.endTimeButton);
-    startButton.setText(record.getCheckinTimeAsString("        "));
-    endButton.setText(record.getCheckoutTimeAsString("        "));
-  }
-
-  /*
-   * Pop up a dialog to start editing a start time.
-   *
-   * @param view a view that invokes this method
-   */
-  void editStartTime(View view)
-  {
-    final Button acceptButton =
-      (Button)alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-    final Button startButton =
-      (Button)alertDialog.findViewById(R.id.startTimeButton);
-    final Button endButton =
-      (Button)alertDialog.findViewById(R.id.endTimeButton);
-    final Time endTime = getTimeOfButton(endButton);
-    Time startTime = getTimeOfButton(startButton);
-    if(startTime == null){
-      Calendar cal = GregorianCalendar.getInstance();
-      startTime = new Time(cal.getTimeInMillis());
+        if (startTime != null) {
+            Log.d(LOGTAG, "editTimeRecord: Set checkin time:" + startTime);
+            record.setCheckinTime(startTime);
+        }
+        if (endTime != null) {
+            Log.d(LOGTAG, "editTimeRecord: Set checkout time:" + endTime);
+            record.setCheckoutTime(endTime);
+        }
+        recordManager.updateWorkRecord(record);
     }
 
-    final TimePickerFragment timePicker = new TimePickerFragment();
-    timePicker.setTimeSetListener(new TimePickerDialog.OnTimeSetListener()
-      {
-	@Override
-	public void onTimeSet(TimePicker view, int hour, int minute)
-	{
-	  Calendar cal = GregorianCalendar.getInstance();
-	  cal.set(Calendar.HOUR_OF_DAY, hour);
-	  cal.set(Calendar.MINUTE, minute);
-	  cal.set(Calendar.SECOND, 0);
-	  cal.set(Calendar.MILLISECOND, 0);
-	  Time startTime = new Time(cal.getTimeInMillis());
-	  startButton.setText(startTime.toString());
-
-	  if(WorkRecord.isValidTimeRange(startTime, endTime)){
-	    Log.d(LOGTAG, "editTimeRecord: Valid time range: "
-		  + startTime + " => " + endTime);
-	    acceptButton.setEnabled(true);
-	  } else {
-	    Log.d(LOGTAG, "editTimeRecord: Ignore invalid time range: "
-		  + startTime + " => " + endTime);
-	    acceptButton.setEnabled(false);
-	  }
-	}
-      });
-    timePicker.setCurrentTime(startTime);
-    timePicker.show(activity.getSupportFragmentManager(), "TimePickerDialog");
-  }
-
-  /*
-   * Pop up a dialog to start editing an end time.
-   *
-   * @param list_position a position in a list from the top
-   */
-  void editEndTime(View view)
-  {
-    final Button acceptButton =
-      (Button)alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-    final Button startButton =
-      (Button)alertDialog.findViewById(R.id.startTimeButton);
-    final Button endButton =
-      (Button)alertDialog.findViewById(R.id.endTimeButton);
-    final Time startTime = getTimeOfButton(startButton);
-    Time endTime = getTimeOfButton(endButton);
-    if(endTime == null){
-      Calendar cal = GregorianCalendar.getInstance();
-      endTime = new Time(cal.getTimeInMillis());
+    private Time getTimeOfButton(Button button) {
+        Log.d(LOGTAG, "getTimeOfButton(): ");
+        Time time = null;
+        try {
+            time = Time.valueOf(button.getText().toString());
+        } catch (IllegalArgumentException ex) {
+        }
+        return time;
     }
 
-    TimePickerFragment timePicker = new TimePickerFragment();
-    timePicker.setTimeSetListener(new TimePickerDialog.OnTimeSetListener()
-      {
-	@Override
-	public void onTimeSet(TimePicker view, int hour, int minute)
-	{
-	  Calendar cal = GregorianCalendar.getInstance();
-	  cal.set(Calendar.HOUR_OF_DAY, hour);
-	  cal.set(Calendar.MINUTE, minute);
-	  cal.set(Calendar.SECOND, 0);
-	  cal.set(Calendar.MILLISECOND, 0);
-	  Time endTime = new Time(cal.getTimeInMillis());
-	  endButton.setText(endTime.toString());
+    /*
+     * Pop up a dialog and start editing a time record located at a
+     * position in a list.
+     *
+     * @param list_position a position in a list from the top
+     */
+    private void editTimeRecord(int list_position) {
 
-	  if(WorkRecord.isValidTimeRange(startTime, endTime)){
-	    Log.d(LOGTAG, "editTimeRecord: Valid time range: "
-		  + startTime + " => " + endTime);
-	    acceptButton.setEnabled(true);
-	  } else {
-	    Log.d(LOGTAG, "editTimeRecord: Ignore invalid time range: "
-		  + startTime + " => " + endTime);
-	    acceptButton.setEnabled(false);
-	  }
-	}
-      });
-    timePicker.setCurrentTime(endTime);
-    timePicker.show(activity.getSupportFragmentManager(), "TimePickerDialog");
-  }
+        final View editTimeView =
+                activity.getLayoutInflater().inflate(R.layout.time_editor, null, false);
+        final WorkRecord record = recordManager.getWorkRecordAt(list_position);
+        final String message =
+                String.format(activity.getResources()
+                                .getString(R.string.time_editor_edit_message_format),
+                        record.getDateAsString());
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setIcon(R.drawable.worklogger_icon);
+        builder.setTitle(R.string.time_editor_title);
+        builder.setMessage(message);
+        builder.setView(editTimeView);
+        builder.setPositiveButton
+                (R.string.time_editor_yes,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface,
+                                                int i) {
+                                Button startButton =
+                                        (Button) editTimeView.findViewById(R.id.startTimeButton);
+                                Button endButton =
+                                        (Button) editTimeView.findViewById(R.id.endTimeButton);
+                                Time startTime = getTimeOfButton(startButton);
+                                Time endTime = getTimeOfButton(endButton);
+
+                                updateTimeRecord(record, startTime, endTime);
+                                updateListView();
+                            }
+                        });
+        builder.setNeutralButton
+                (R.string.time_editor_cancel,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface,
+                                                int i) {
+                                // Nothing to do.
+                            }
+                        });
+        builder.create();
+        alertDialog = builder.show();
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+
+        Button startButton = (Button) editTimeView.findViewById(R.id.startTimeButton);
+        Button endButton = (Button) editTimeView.findViewById(R.id.endTimeButton);
+        startButton.setText(record.getCheckinTimeAsString("        "));
+        endButton.setText(record.getCheckoutTimeAsString("        "));
+    }
+
+    /*
+     * Pop up a dialog to start editing a start time.
+     *
+     * @param view a view that invokes this method
+     */
+    void editStartTime(View view) {
+        final Button acceptButton =
+                (Button) alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        final Button startButton =
+                (Button) alertDialog.findViewById(R.id.startTimeButton);
+        final Button endButton =
+                (Button) alertDialog.findViewById(R.id.endTimeButton);
+        final Time endTime = getTimeOfButton(endButton);
+        Time startTime = getTimeOfButton(startButton);
+        if (startTime == null) {
+            Calendar cal = GregorianCalendar.getInstance();
+            startTime = new Time(cal.getTimeInMillis());
+        }
+
+        final TimePickerFragment timePicker = new TimePickerFragment();
+        timePicker.setTimeSetListener(new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hour, int minute) {
+                Calendar cal = GregorianCalendar.getInstance();
+                cal.set(Calendar.HOUR_OF_DAY, hour);
+                cal.set(Calendar.MINUTE, minute);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                Time startTime = new Time(cal.getTimeInMillis());
+                startButton.setText(startTime.toString());
+
+                if (WorkRecord.isValidTimeRange(startTime, endTime)) {
+                    Log.d(LOGTAG, "editTimeRecord: Valid time range: "
+                            + startTime + " => " + endTime);
+                    acceptButton.setEnabled(true);
+                } else {
+                    Log.d(LOGTAG, "editTimeRecord: Ignore invalid time range: "
+                            + startTime + " => " + endTime);
+                    acceptButton.setEnabled(false);
+                }
+            }
+        });
+        timePicker.setCurrentTime(startTime);
+        timePicker.show(activity.getSupportFragmentManager(), "TimePickerDialog");
+    }
+
+    /*
+     * Pop up a dialog to start editing an end time.
+     *
+     * @param list_position a position in a list from the top
+     */
+    void editEndTime(View view) {
+        final Button acceptButton =
+                (Button) alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        final Button startButton =
+                (Button) alertDialog.findViewById(R.id.startTimeButton);
+        final Button endButton =
+                (Button) alertDialog.findViewById(R.id.endTimeButton);
+        final Time startTime = getTimeOfButton(startButton);
+        Time endTime = getTimeOfButton(endButton);
+        if (endTime == null) {
+            Calendar cal = GregorianCalendar.getInstance();
+            endTime = new Time(cal.getTimeInMillis());
+        }
+
+        TimePickerFragment timePicker = new TimePickerFragment();
+        timePicker.setTimeSetListener(new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hour, int minute) {
+                Calendar cal = GregorianCalendar.getInstance();
+                cal.set(Calendar.HOUR_OF_DAY, hour);
+                cal.set(Calendar.MINUTE, minute);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                Time endTime = new Time(cal.getTimeInMillis());
+                endButton.setText(endTime.toString());
+
+                if (WorkRecord.isValidTimeRange(startTime, endTime)) {
+                    Log.d(LOGTAG, "editTimeRecord: Valid time range: "
+                            + startTime + " => " + endTime);
+                    acceptButton.setEnabled(true);
+                } else {
+                    Log.d(LOGTAG, "editTimeRecord: Ignore invalid time range: "
+                            + startTime + " => " + endTime);
+                    acceptButton.setEnabled(false);
+                }
+            }
+        });
+        timePicker.setCurrentTime(endTime);
+        timePicker.show(activity.getSupportFragmentManager(), "TimePickerDialog");
+    }
 }

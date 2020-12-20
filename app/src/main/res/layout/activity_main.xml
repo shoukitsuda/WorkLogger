@@ -29,16 +29,18 @@
         style="?android:attr/imageButtonStyle"
         android:layout_width="65dp"
         android:layout_height="59dp"
-        android:layout_marginEnd="100dp"
         android:layout_marginStart="100dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="100dp"
         android:background="@drawable/starter_button"
         android:textAlignment="center"
         android:textOff="@string/stop_working"
         android:textOn="@string/start_working"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

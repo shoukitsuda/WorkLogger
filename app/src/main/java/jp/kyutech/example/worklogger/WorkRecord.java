@@ -199,6 +199,10 @@ public class WorkRecord
     return checkin;
   }
 
+  public long getCheckinTimeAslong(){return checkin.getTime();}
+  public long getCheckoutTimeAslong(){return checkout.getTime();}
+
+
   /*
    * Returns a check-in time plus a offset time from GMT time zone.
    * For example, 9 hours are added to a check-in time in JST.  This
