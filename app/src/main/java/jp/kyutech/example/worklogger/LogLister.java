@@ -69,17 +69,19 @@ class LogLister
         Log.d(LOGTAG, "updateListView(): ");
         List<WorkRecord> records = recordManager.getWorkRecords(31);
 
-    // Create a list of items to be displayed.
-    ArrayList<String> items = new ArrayList<>();
-    for(WorkRecord record : records){
-      String checkin_time = record.getCheckinTimeAsString("        ");
-      String checkout_time = record.getCheckoutTimeAsString("        ");
-      String arrow = (record.getCheckinTime()==null)?"  ":"=>";
-      String label =
-	String.format("%s    %s %s %s",
-		      record.getDate(), checkin_time, arrow, checkout_time);
-      items.add(label);
-    }
+        // Create a list of items to be displayed.
+        ArrayList<String> items = new ArrayList<>();
+        for (WorkRecord record : records) {
+            String checkin_time = record.getCheckinTimeAsString("        ");
+            String checkout_time = record.getCheckoutTimeAsString("        ");
+            String arrow = (record.getCheckinTime() == null) ? "  " : "=>";
+            String label =
+                    String.format("%s    %s %s %s total = hoge",
+                            record.getDate(), checkin_time, arrow, checkout_time);
+            items.add(label);
+        }
+
+        long in = System.currentTimeMillis()
 
         if (items.equals(last_items)) {
             // No need to update a listView because nothing is updated.
@@ -137,6 +139,7 @@ class LogLister
      * @param list_position a position in a list from the top
      */
     private void editTimeRecord(int list_position) {
+        Log.d(LOGTAG, "editTimeRecord(): ");
 
         final View editTimeView =
                 activity.getLayoutInflater().inflate(R.layout.time_editor, null, false);

@@ -199,8 +199,6 @@ public class WorkRecord
     return checkin;
   }
 
-  public long getCheckinTimeAslong(){return checkin.getTime();}
-  public long getCheckoutTimeAslong(){return checkout.getTime();}
 
 
   /*
@@ -258,10 +256,10 @@ public class WorkRecord
    * @return a java.sql.Time
    * @see getCheckoutTimeWithTimeZoneOffset
    */
-  public Time getCheckoutTimeWithTimeZoneOffset()
-  {
-    return getTimeWithTimeZoneOffset(checkout);
-  }
+//  public Time getCheckoutTimeWithTimeZoneOffset()
+//  {
+//    return getTimeWithTimeZoneOffset(checkout);
+//  }
 
   public String getCheckoutTimeAsString()
   {
