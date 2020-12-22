@@ -84,7 +84,6 @@ class LogLister
                     ? 0
                     : out_time.getTime();
 
-
             long total_long = out_long - in_long;
             String total_String = Long.toString(total_long);
 
