@@ -75,13 +75,26 @@ class LogLister
             String checkin_time = record.getCheckinTimeAsString("        ");
             String checkout_time = record.getCheckoutTimeAsString("        ");
             String arrow = (record.getCheckinTime() == null) ? "  " : "=>";
+
+            Time in_time = record.getCheckinTime();
+            Time out_time = record.getCheckoutTime();
+
+            Long in_long = in_time.getTime();
+            Long out_long = (out_time == null)
+                    ? 0
+                    : out_time.getTime();
+
+
+            long total_long = out_long - in_long;
+            String total_String = Long.toString(total_long);
+
             String label =
-                    String.format("%s    %s %s %s total = hoge",
-                            record.getDate(), checkin_time, arrow, checkout_time);
+                    String.format("%s    %s %s %s total = %s ms",
+                            record.getDate(), checkin_time, arrow, checkout_time, total_String);
+
             items.add(label);
         }
 
-        long in = System.currentTimeMillis()
 
         if (items.equals(last_items)) {
             // No need to update a listView because nothing is updated.
