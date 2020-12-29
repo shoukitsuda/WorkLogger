@@ -47,34 +47,37 @@ class TimerSwitch
 
     }
 
-    public static void timer(String[] args) {
-        System.out.println("タスクを3秒後に実行されるようセットしました。");
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        Log.d(LOGTAG, "onCheckedChanged():" + isChecked);
+        String error_message = null;
+        try {
+            recordManager.updateWorkRecordBy(isChecked);
+        } catch (Exception ex) {
+            Log.e(LOGTAG, ex.getMessage(), ex);
+            String title =
+                    activity.getResources().getString(R.string.dialog_alert_title);
+            String message = MessageFormatter.getErrorReason(ex);
+            ErrorFragment.showErrorDialog(activity, title, message);
+        }
+        activity.updateView();
+    }
+
+    void updateTimerView() {
+        Log.d(LOGTAG, "updateTimerView():");
         TimerTask task = new TimerTask() {
             public void run() {
                 System.out.println("タスクが実行されました。");
+                button.setBackground(drawable_timer_stop);
+                button.setText("Stop working");
+                button.setEnabled(true);
             }
         };
 
         Timer timer = new Timer();
         timer.schedule(task, 3000);
-
     }
 
-    void updateTimerView() {
-        Log.d(LOGTAG, "updateTimerView():");
-        if (button.isChecked()) {
-            button.setBackground(drawable_timer_stop);
-            button.setText("Stop working");
-        } else {
-            button.setBackground(drawable_timer_start);
-            button.setText("Start Working");
-        }
-        button.setEnabled(true);
-    }
 
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-    }
 }
 
