@@ -25,4 +25,5 @@
         umerin@ci.kyutech.ac.jp
     </string>
     <string name="app_about_yes">Yes</string>
+    <string name="togglebutton">ToggleButton</string>
 </resources>

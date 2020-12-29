@@ -12,10 +12,14 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.WindowInsets;
 import android.widget.CompoundButton;
 import android.widget.ToggleButton;
+
 import java.util.Timer;
 import java.util.TimerTask;
+
 /**
  * Starter switch class which implements ToggleButton.OnCheckedChangeListener.
  *
@@ -23,18 +27,27 @@ import java.util.TimerTask;
  * @version $Revision$
  */
 
-class TimerSwitch {
-
+class TimerSwitch
+        implements ToggleButton.OnCheckedChangeListener {
     private static final String LOGTAG = "TimerSwitch";
-    private static final int	VIBRATION_PERIOD = 1000; // 1000msec.
-    private MainActivity		activity = null;
-    private WorkRecordManager	recordManager = null;
+    private static final int VIBRATION_PERIOD = 1000; // 1000msec.
+    private MainActivity activity = null;
+    private WorkRecordManager recordManager = null;
     private ToggleButton button = null;
     private Drawable drawable_timer_stop = null;
     private Drawable drawable_timer_start = null;
     private Drawable drawable_timer_disabled = null;
 
-    public static void main(String[] args) {
+    TimerSwitch(MainActivity activity, ToggleButton button, WorkRecordManager recordManager) {
+        this.activity = activity;
+        this.button = button;
+        this.recordManager = recordManager;
+
+        updateTimerView();
+
+    }
+
+    public static void timer(String[] args) {
         System.out.println("タスクを3秒後に実行されるようセットしました。");
         TimerTask task = new TimerTask() {
             public void run() {
@@ -47,17 +60,21 @@ class TimerSwitch {
 
     }
 
-    void updateTimerView(){
-        Log.d(LOGTAG,"updateTimerView():");
-        if(button.isChecked()){
+    void updateTimerView() {
+        Log.d(LOGTAG, "updateTimerView():");
+        if (button.isChecked()) {
             button.setBackground(drawable_timer_stop);
             button.setText("Stop working");
-        }else{
+        } else {
             button.setBackground(drawable_timer_start);
             button.setText("Start Working");
         }
         button.setEnabled(true);
     }
 
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+    }
 }
 
