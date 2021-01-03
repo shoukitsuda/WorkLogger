@@ -26,4 +26,9 @@
     </string>
     <string name="app_about_yes">Yes</string>
     <string name="togglebutton">ToggleButton</string>
+
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+    <string name="zero">"00:00.0"</string>
+
 </resources>

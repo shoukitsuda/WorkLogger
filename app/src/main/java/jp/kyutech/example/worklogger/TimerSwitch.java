@@ -38,13 +38,20 @@ class TimerSwitch
     private Drawable drawable_timer_start = null;
     private Drawable drawable_timer_disabled = null;
 
-    TimerSwitch(MainActivity activity, ToggleButton button, WorkRecordManager recordManager) {
+    TimerSwitch(MainActivity activity,
+                ToggleButton button,
+                WorkRecordManager recordManager) {
         this.activity = activity;
         this.button = button;
         this.recordManager = recordManager;
 
-        updateTimerView();
+        Bitmap bitmap_timer_stop =
+                BitmapFactory.decodeResource(activity.getResources(),
+                        R.drawable.starter_stop);
+        drawable_timer_stop =
+                new BitmapDrawable(activity.getResources(), bitmap_timer_stop);
 
+        updateTimerView();
     }
 
     @Override
@@ -77,7 +84,5 @@ class TimerSwitch
         Timer timer = new Timer();
         timer.schedule(task, 3000);
     }
-
-
 }
 

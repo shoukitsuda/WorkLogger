@@ -9,14 +9,33 @@ package jp.kyutech.example.worklogger;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Handler;
+import android.os.Bundle;
+import android.os.Looper;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 /**
  * MainActivity class defines a main activity of this application.  An
@@ -37,6 +56,25 @@ public class MainActivity extends AppCompatActivity {
     // NOTE: Remember a current application state because Dialogs cannot
     // be created after stopped.
     private boolean is_started_p = false;
+
+    private final Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            count++;
+            timerText.setText(dataFormat.
+                    format(count * period));
+            handler.postDelayed(this, period);
+        }
+    };
+
+    // 'Handler()' is deprecated as of API 30: Android 11.0 (R)
+    private final Handler handler = new Handler(Looper.getMainLooper());
+
+    private TextView timerText;
+    private final SimpleDateFormat dataFormat =
+            new SimpleDateFormat("mm:ss.S", Locale.US);
+
+    private int count, period;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -199,6 +237,30 @@ public class MainActivity extends AppCompatActivity {
     /*
      * Show an about dialog.
      */
+
+    private void setTimer() {
+
+        Button startButton = findViewById(R.id.start_button);
+        startButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                handler.post(runnable);
+            }
+        });
+
+        // タイマー終了
+        Button stopButton = findViewById(R.id.stop_button);
+        stopButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                handler.removeCallbacks(runnable);
+                timerText.setText(dataFormat.format(0));
+                count = 0;
+            }
+        });
+
+    }
+
     private void showAbout() {
         View messageView =
                 getLayoutInflater().inflate(R.layout.about, null, false);
