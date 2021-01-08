@@ -25,17 +25,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import androidx.appcompat.app.AppCompatActivity;
+import android.content.Intent;
 
-import android.os.Handler;
-import android.os.Bundle;
-import android.os.Looper;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-
-import java.text.SimpleDateFormat;
-import java.util.Locale;
 
 /**
  * MainActivity class defines a main activity of this application.  An
@@ -50,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String LOGTAG = "MainActivity";
     private WorkRecordManager recordManager = null;
     private StarterSwitch starterSwitch = null;
-    private TimerSwitch timerSwitch = null;
+    //    private TimerSwitch timerSwitch = null;
     private LogLister logLister = null;
     private Notifier notifier = null;
     // NOTE: Remember a current application state because Dialogs cannot
@@ -95,13 +86,24 @@ public class MainActivity extends AppCompatActivity {
                 new StarterSwitch(this, starterButton, recordManager);
         starterButton.setOnCheckedChangeListener(starterSwitch);
 
-        ToggleButton timerButton = (ToggleButton) findViewById(R.id.timerButton);
-        timerSwitch = new TimerSwitch(this, starterButton, recordManager);
-        timerButton.setOnCheckedChangeListener(timerSwitch);
-
         if (savedInstanceState != null) {
             onRestoreInstanceState(savedInstanceState);
         }
+
+        Button sendButton = findViewById(R.id.TimerButton);
+//        sendButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(getApplication(), Time.class);
+//                startActivity(intent);
+//            }
+//        });
+
+        // lambda式
+        sendButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, Time.class);
+            startActivity(intent);
+        });
     }
 
     @Override
@@ -191,7 +193,6 @@ public class MainActivity extends AppCompatActivity {
     public void updateView() {
         logLister.updateListView();
         starterSwitch.updateStarterView();
-        timerSwitch.updateTimerView();
     }
 
     /*

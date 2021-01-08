@@ -13,12 +13,16 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowInsets;
 import android.widget.CompoundButton;
 import android.widget.ToggleButton;
 
 import java.util.Timer;
 import java.util.TimerTask;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.widget.Button;
+
 
 /**
  * Starter switch class which implements ToggleButton.OnCheckedChangeListener.
@@ -27,9 +31,8 @@ import java.util.TimerTask;
  * @version $Revision$
  */
 
-class TimerSwitch
-        implements ToggleButton.OnCheckedChangeListener {
-    private static final String LOGTAG = "TimerSwitch";
+class Time extends AppCompatActivity {
+    private static final String LOGTAG = "Timer";
     private static final int VIBRATION_PERIOD = 1000; // 1000msec.
     private MainActivity activity = null;
     private WorkRecordManager recordManager = null;
@@ -38,9 +41,28 @@ class TimerSwitch
     private Drawable drawable_timer_start = null;
     private Drawable drawable_timer_disabled = null;
 
-    TimerSwitch(MainActivity activity,
-                ToggleButton button,
-                WorkRecordManager recordManager) {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.timer);
+
+        Button returnButton = findViewById(R.id.stop_button);
+//        returnButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                finish();
+//            }
+//        });
+
+//        lambda式
+        returnButton.setOnClickListener(v -> finish());
+    }
+
+    protected void
+    Timer(MainActivity activity,
+          ToggleButton button,
+          WorkRecordManager recordManager) {
         this.activity = activity;
         this.button = button;
         this.recordManager = recordManager;
@@ -54,7 +76,6 @@ class TimerSwitch
         updateTimerView();
     }
 
-    @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         Log.d(LOGTAG, "onCheckedChanged():" + isChecked);
         String error_message = null;

@@ -10,52 +10,46 @@
     <ListView
         android:id="@+id/logList"
         style="@android:style/Widget.Material.ListView"
-        android:layout_width="340dp"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="35dp"
+        android:layout_marginEnd="35dp"
+        android:layout_marginBottom="41dp"
         android:background="#bbff33"
         android:scrollbars="vertical"
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/timerButton" />
+        app:layout_constraintTop_toBottomOf="@+id/starterButton" />
 
     <ToggleButton
         android:id="@+id/starterButton"
         style="?android:attr/imageButtonStyle"
-        android:layout_width="0dp"
-        android:layout_height="59dp"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="92dp"
-        android:layout_marginEnd="100dp"
+        android:layout_width="159dp"
+        android:layout_height="99dp"
+        android:layout_marginTop="69dp"
+        android:layout_marginBottom="27dp"
         android:background="@drawable/starter_button"
         android:textAlignment="center"
         android:textOff="@string/stop_working"
         android:textOn="@string/start_working"
+        app:layout_constraintBottom_toTopOf="@+id/logList"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/timerButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ToggleButton
-        android:id="@+id/timerButton"
+    <Button
+        android:id="@+id/TimerButton"
+        android:text="@string/move"
+        android:textSize="30sp"
+        android:layout_margin="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="55dp"
-        android:layout_marginTop="45dp"
-        android:layout_marginEnd="103dp"
-        android:layout_marginBottom="38dp"
-        android:text="@string/togglebutton"
-        app:layout_constraintBottom_toTopOf="@+id/logList"
-        app:layout_constraintEnd_toStartOf="@+id/starterButton"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/logList" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
