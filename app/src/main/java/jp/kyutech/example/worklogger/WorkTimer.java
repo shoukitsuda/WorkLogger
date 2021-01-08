@@ -12,7 +12,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
+
 import android.widget.CompoundButton;
 import android.widget.ToggleButton;
 
@@ -31,15 +31,12 @@ import android.widget.Button;
  * @version $Revision$
  */
 
-class Time extends AppCompatActivity {
+public class WorkTimer extends AppCompatActivity {
     private static final String LOGTAG = "Timer";
-    private static final int VIBRATION_PERIOD = 1000; // 1000msec.
     private MainActivity activity = null;
     private WorkRecordManager recordManager = null;
     private ToggleButton button = null;
     private Drawable drawable_timer_stop = null;
-    private Drawable drawable_timer_start = null;
-    private Drawable drawable_timer_disabled = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +99,7 @@ class Time extends AppCompatActivity {
             }
         };
 
-        Timer timer = new Timer();
+        java.util.Timer timer = new java.util.Timer();
         timer.schedule(task, 3000);
     }
 }

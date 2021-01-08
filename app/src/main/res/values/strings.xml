@@ -20,7 +20,7 @@
     </string>
     <string name="app_about_credits">
         WorkLogger 0.1\n
-        Copyright(C) 2018-2020\n
+        Copyright© 2018-2020\n
         Masanobu UMEDA\n
         umerin@ci.kyutech.ac.jp
     </string>
@@ -32,7 +32,7 @@
     <string name="zero">"00:00.0"</string>
 
     <string name="main">Main Activity</string>
-    <string name="move">MOVE</string>
+    <string name="WorkTimer">Timer</string>
     <string name="sub">Sub Activity</string>
     <string name="return_sub">RETURN</string>
 

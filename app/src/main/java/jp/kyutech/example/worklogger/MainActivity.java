@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
 
         // lambda式
         sendButton.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, Time.class);
+            Intent intent = new Intent(getApplication(), WorkTimer.class);
             startActivity(intent);
         });
     }
