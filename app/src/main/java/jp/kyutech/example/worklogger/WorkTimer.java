@@ -38,12 +38,13 @@ public class WorkTimer extends AppCompatActivity {
     private ToggleButton button = null;
     private Drawable drawable_timer_stop = null;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.timer);
-
+        Button startButton = findViewById(R.id.start_button);
         Button returnButton = findViewById(R.id.stop_button);
 //        returnButton.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -53,6 +54,7 @@ public class WorkTimer extends AppCompatActivity {
 //        });
 
 //        lambda式
+        startButton.setOnClickListener(v -> startTimer());
         returnButton.setOnClickListener(v -> finish());
     }
 
@@ -60,17 +62,14 @@ public class WorkTimer extends AppCompatActivity {
     Timer(MainActivity activity,
           ToggleButton button,
           WorkRecordManager recordManager) {
+
+        Log.d(LOGTAG, "timer");
+
         this.activity = activity;
         this.button = button;
         this.recordManager = recordManager;
 
-        Bitmap bitmap_timer_stop =
-                BitmapFactory.decodeResource(activity.getResources(),
-                        R.drawable.starter_stop);
-        drawable_timer_stop =
-                new BitmapDrawable(activity.getResources(), bitmap_timer_stop);
-
-        updateTimerView();
+        startTimer();
     }
 
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -88,19 +87,16 @@ public class WorkTimer extends AppCompatActivity {
         activity.updateView();
     }
 
-    void updateTimerView() {
-        Log.d(LOGTAG, "updateTimerView():");
+    protected void startTimer() {
+        Log.d(LOGTAG, "startTimer():");
         TimerTask task = new TimerTask() {
             public void run() {
                 System.out.println("タスクが実行されました。");
-                button.setBackground(drawable_timer_stop);
-                button.setText("Stop working");
-                button.setEnabled(true);
             }
         };
-
         java.util.Timer timer = new java.util.Timer();
-        timer.schedule(task, 3000);
+        timer.schedule(task, 300000);
+        System.out.println("猫飼いたい");
     }
 }
 

@@ -41,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
     private static final String LOGTAG = "MainActivity";
     private WorkRecordManager recordManager = null;
     private StarterSwitch starterSwitch = null;
+
+    private WorkTimer updateTimer = null;
+
     //    private TimerSwitch timerSwitch = null;
     private LogLister logLister = null;
     private Notifier notifier = null;
@@ -194,6 +197,7 @@ public class MainActivity extends AppCompatActivity {
         logLister.updateListView();
         starterSwitch.updateStarterView();
     }
+
 
     /*
      * Post an informative message.
