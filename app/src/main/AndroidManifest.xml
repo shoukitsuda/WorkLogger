@@ -15,21 +15,21 @@
         android:required="true" />
 
     <application
-        android:allowBackup="true"
         android:icon="@drawable/worklogger_icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".WorkTimer"
+            android:label="@string/app_name" />
     </application>
-
-
 </manifest>

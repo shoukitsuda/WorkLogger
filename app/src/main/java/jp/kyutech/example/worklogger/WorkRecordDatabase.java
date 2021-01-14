@@ -24,18 +24,17 @@ import android.util.Log;
  * @version $Revision$
  */
 
-public class WorkRecordDatabase extends SQLiteOpenHelper
-{
-  private static final String LOGTAG = "WorkRecordDatabase";
-  private static final String DB_NAME = "iworkedharder.sqlite";
-  private static final int	DB_VERSION = 1;
-  private static final String TABLE_WORKRECORDS = "workrecords";
-  // Database fields
-  private static final String FIELD_ID = "id";
-  private static final String FIELD_USER = "user";
-  private static final String FIELD_DATE = "date";
-  private static final String FIELD_CHECKIN = "checkin";
-  private static final String FIELD_CHECKOUT = "checkout";
+public class WorkRecordDatabase extends SQLiteOpenHelper {
+    private static final String LOGTAG = "WorkRecordDatabase";
+    private static final String DB_NAME = "iworkedharder.sqlite";
+    private static final int DB_VERSION = 1;
+    private static final String TABLE_WORKRECORDS = "workrecords";
+    // Database fields
+    private static final String FIELD_ID = "id";
+    private static final String FIELD_USER = "user";
+    private static final String FIELD_DATE = "date";
+    private static final String FIELD_CHECKIN = "checkin";
+    private static final String FIELD_CHECKOUT = "checkout";
 
     public WorkRecordDatabase(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -102,13 +101,13 @@ public class WorkRecordDatabase extends SQLiteOpenHelper
                     ("addWorkRecord: duplicated records for " + date);
         }
 
-    SQLiteDatabase db = this.getWritableDatabase();
-    try {
-      ContentValues values = new ContentValues();
-      values.put(FIELD_USER, record.getUser());
-      values.put(FIELD_DATE, record.getDateAsString());
-      values.put(FIELD_CHECKIN, record.getCheckinTimeAsString());
-      values.put(FIELD_CHECKOUT, record.getCheckoutTimeAsString());
+        SQLiteDatabase db = this.getWritableDatabase();
+        try {
+            ContentValues values = new ContentValues();
+            values.put(FIELD_USER, record.getUser());
+            values.put(FIELD_DATE, record.getDateAsString());
+            values.put(FIELD_CHECKIN, record.getCheckinTimeAsString());
+            values.put(FIELD_CHECKOUT, record.getCheckoutTimeAsString());
 
             long id = db.insert(TABLE_WORKRECORDS,
                     null,    // nullColumnHack
@@ -133,13 +132,13 @@ public class WorkRecordDatabase extends SQLiteOpenHelper
     public void updateWorkRecord(WorkRecord record) {
         Log.d(LOGTAG, "UPDATE: " + record);
 
-    SQLiteDatabase db = this.getWritableDatabase();
-    try {
-      ContentValues values = new ContentValues();
-      values.put(FIELD_USER, record.getUser());
-      values.put(FIELD_DATE, record.getDateAsString());
-      values.put(FIELD_CHECKIN, record.getCheckinTimeAsString());
-      values.put(FIELD_CHECKOUT, record.getCheckoutTimeAsString());
+        SQLiteDatabase db = this.getWritableDatabase();
+        try {
+            ContentValues values = new ContentValues();
+            values.put(FIELD_USER, record.getUser());
+            values.put(FIELD_DATE, record.getDateAsString());
+            values.put(FIELD_CHECKIN, record.getCheckinTimeAsString());
+            values.put(FIELD_CHECKOUT, record.getCheckoutTimeAsString());
 
             int nrows =
                     db.update(TABLE_WORKRECORDS,
