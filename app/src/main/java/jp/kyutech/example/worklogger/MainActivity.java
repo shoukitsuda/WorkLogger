@@ -94,15 +94,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Button sendButton = findViewById(R.id.TimerButton);
-//        sendButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(getApplication(), Time.class);
-//                startActivity(intent);
-//            }
-//        });
 
-        // lambda式
         sendButton.setOnClickListener(v -> {
             Intent intent = new Intent(getApplication(), WorkTimer.class);
             startActivity(intent);

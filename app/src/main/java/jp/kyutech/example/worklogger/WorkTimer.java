@@ -6,22 +6,21 @@
 
 package jp.kyutech.example.worklogger;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
-
-import android.widget.CompoundButton;
 import android.widget.ToggleButton;
 
-import java.util.Timer;
 import java.util.TimerTask;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.widget.Button;
+import android.widget.EditText;
+import android.app.AlertDialog;
+import android.os.Handler;
+import android.widget.Toast;
 
 
 /**
@@ -32,11 +31,15 @@ import android.widget.Button;
  */
 
 public class WorkTimer extends AppCompatActivity {
+    private LogLister logLister = null;
+
     private static final String LOGTAG = "Timer";
     private MainActivity activity = null;
     private WorkRecordManager recordManager = null;
     private ToggleButton button = null;
     private Drawable drawable_timer_stop = null;
+
+    private EditText inputTime;
 
 
     @Override
@@ -44,59 +47,64 @@ public class WorkTimer extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.timer);
+        inputTime = findViewById(R.id.input_time);
+
         Button startButton = findViewById(R.id.start_button);
         Button returnButton = findViewById(R.id.stop_button);
-//        returnButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                finish();
-//            }
-//        });
 
-//        lambda式
-        startButton.setOnClickListener(v -> startTimer());
+        startButton.setOnClickListener(v -> {
+            String workTime = inputTime.getText().toString();
+            long time = Long.valueOf(workTime);
+            if (workTime.equals("")) {
+                time = 15 * 60000;
+            }
+            time = time * 60000;
+            startTimer(time);
+
+        });
         returnButton.setOnClickListener(v -> finish());
+
+
     }
 
-    protected void
-    Timer(MainActivity activity,
-          ToggleButton button,
-          WorkRecordManager recordManager) {
-
-        Log.d(LOGTAG, "timer");
-
-        this.activity = activity;
-        this.button = button;
-        this.recordManager = recordManager;
-
-        startTimer();
-    }
-
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        Log.d(LOGTAG, "onCheckedChanged():" + isChecked);
-        String error_message = null;
-        try {
-            recordManager.updateWorkRecordBy(isChecked);
-        } catch (Exception ex) {
-            Log.e(LOGTAG, ex.getMessage(), ex);
-            String title =
-                    activity.getResources().getString(R.string.dialog_alert_title);
-            String message = MessageFormatter.getErrorReason(ex);
-            ErrorFragment.showErrorDialog(activity, title, message);
-        }
-        activity.updateView();
-    }
-
-    protected void startTimer() {
+    protected void startTimer(long workTime) {
         Log.d(LOGTAG, "startTimer():");
         TimerTask task = new TimerTask() {
             public void run() {
+                onDialog();
+
+                //ここにWorkRecordDataBaseに作業時間を記録するタスクを記述する
                 System.out.println("タスクが実行されました。");
+
             }
         };
         java.util.Timer timer = new java.util.Timer();
-        timer.schedule(task, 300000);
-        System.out.println("猫飼いたい");
+        timer.schedule(task, workTime);
+    }
+
+    final Handler handler = new Handler();
+
+    protected void onDialog() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                handler.post(new Runnable() {
+                    public void run() {
+                        AlertDialog.Builder builder;
+                        builder = new AlertDialog.Builder(WorkTimer.this);
+                        Log.d(LOGTAG, "timer finish");
+                        builder.setMessage("目標時間になりました！")
+                                .setPositiveButton("home", (dialog, id) -> {
+                                    Intent intent = new Intent(getApplication(), MainActivity.class);
+                                    startActivity(intent);
+                                });
+                        builder.show();
+                    }
+                });
+            }
+        }).start();
     }
 }
+
+
 
