@@ -10,16 +10,17 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.CompoundButton;
 import android.widget.ToggleButton;
 
-import java.sql.Time;
 import java.util.TimerTask;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.widget.Button;
 import android.widget.EditText;
+import android.app.AlertDialog;
+import android.os.Handler;
+import android.widget.Toast;
 
 
 /**
@@ -57,48 +58,53 @@ public class WorkTimer extends AppCompatActivity {
             if (workTime.equals("")) {
                 time = 15 * 60000;
             }
-
             time = time * 60000;
             startTimer(time);
 
         });
         returnButton.setOnClickListener(v -> finish());
-    }
 
-//    protected void
-//    Timer(MainActivity activity,
-//          ToggleButton button,
-//          WorkRecordManager recordManager) {
-//
-//        Log.d(LOGTAG, "timer");
-//
-//        this.activity = activity;
-//        this.button = button;
-//        this.recordManager = recordManager;
-//
-//        startTimer();
-//    }
+
+    }
 
     protected void startTimer(long workTime) {
         Log.d(LOGTAG, "startTimer():");
-
-
         TimerTask task = new TimerTask() {
             public void run() {
-
-                Intent intent = new Intent(getApplication(), MainActivity.class);
-                startActivity(intent);
-
+                onDialog();
 
                 //ここにWorkRecordDataBaseに作業時間を記録するタスクを記述する
                 System.out.println("タスクが実行されました。");
-                logLister.updateListView();
 
             }
         };
         java.util.Timer timer = new java.util.Timer();
         timer.schedule(task, workTime);
-        System.out.println("猫飼いたい");
+    }
+
+    final Handler handler = new Handler();
+
+    protected void onDialog() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                handler.post(new Runnable() {
+                    public void run() {
+                        AlertDialog.Builder builder;
+                        builder = new AlertDialog.Builder(WorkTimer.this);
+                        Log.d(LOGTAG, "timer finish");
+                        builder.setMessage("目標時間になりました！")
+                                .setPositiveButton("home", (dialog, id) -> {
+                                    Intent intent = new Intent(getApplication(), MainActivity.class);
+                                    startActivity(intent);
+                                });
+                        builder.show();
+                    }
+                });
+            }
+        }).start();
     }
 }
+
+
 
