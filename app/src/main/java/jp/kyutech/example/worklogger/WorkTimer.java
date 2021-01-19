@@ -6,6 +6,7 @@
 
 package jp.kyutech.example.worklogger;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -94,9 +95,12 @@ public class WorkTimer extends AppCompatActivity {
                         builder = new AlertDialog.Builder(WorkTimer.this);
                         Log.d(LOGTAG, "timer finish");
                         builder.setMessage("目標時間になりました！")
-                                .setPositiveButton("home", (dialog, id) -> {
-                                    Intent intent = new Intent(getApplication(), MainActivity.class);
-                                    startActivity(intent);
+                                .setPositiveButton("home", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent intent = new Intent(getApplication(), MainActivity.class);
+                                        startActivity(intent);
+                                    }
                                 });
                         builder.show();
                     }
